@@ -1,0 +1,46 @@
+package claudiopostiglione.u5w2d3.entities;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
+
+@Entity
+@Table(name = "autore")
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+public class Autore {
+
+    //Attributi
+    @Id
+    @GeneratedValue
+    @Setter(AccessLevel.NONE)
+    private UUID id;
+    @Column(name = "Nome")
+    private String nome;
+    @Column(name = "Cognome")
+    private String cognome;
+    @Column(name = "E-mail")
+    private String email;
+    @Column(name = "Data_di_Nascita")
+    private LocalDate dataDiNascita;
+    @Column(name = "Avatar_url")
+    private String avatar;
+
+    @OneToMany(mappedBy = "autore")
+    private List<Blog> listaBlogs;
+
+    //Construttori
+    public Autore(String nome, String cognome, String email, LocalDate dataDiNascita){
+        this.nome = nome;
+        this.cognome = cognome;
+        this.email = email;
+        this.dataDiNascita = dataDiNascita;
+    }
+}
