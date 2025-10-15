@@ -1,9 +1,11 @@
 package claudiopostiglione.u5w2d3.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -12,9 +14,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "autore")
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class Autore {
 
     //Attributi
@@ -33,8 +33,9 @@ public class Autore {
     @Column(name = "Avatar_url")
     private String avatar;
 
-    @OneToMany(mappedBy = "autore")
-    private List<Blog> listaBlogs;
+    @JsonIgnore
+    @OneToMany(mappedBy = "author")
+    private List<Blog> listaBlogs = new ArrayList<>();
 
     //Construttori
     public Autore(String nome, String cognome, String email, LocalDate dataDiNascita){

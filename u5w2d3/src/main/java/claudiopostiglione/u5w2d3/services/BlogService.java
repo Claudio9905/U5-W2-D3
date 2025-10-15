@@ -5,6 +5,7 @@ import claudiopostiglione.u5w2d3.entities.Blog;
 import claudiopostiglione.u5w2d3.exceptions.BadRequestException;
 import claudiopostiglione.u5w2d3.exceptions.IdNotFoundException;
 import claudiopostiglione.u5w2d3.payloads.BlogPayload;
+import claudiopostiglione.u5w2d3.repositories.AutoreRepository;
 import claudiopostiglione.u5w2d3.repositories.BlogRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,9 @@ public class BlogService {
     @Autowired
     private AutoreService autoreService;
 
+    @Autowired
+    private AutoreRepository autoreRepository;
+
     // 1.
     public Page<Blog> findAll(int pageNumber, int pageSize, String sortBy) {
         if (pageSize > 50) pageSize = 50;
@@ -47,8 +51,14 @@ public class BlogService {
         this.blogRepository.findByTitolo(body.getTitolo()).ifPresent(blog -> {
             throw new BadRequestException("Il blog con titolo " + blog.getTitolo() + " esiste già");
         });
-        Blog newBlog = new Blog(body.getCategoria(), body.getTitolo(), body.getCover(), body.getContenuto(), body.getTempoDiLettura(),this.autoreService.findAutoreById(body.getAuthorId()));
+        Blog newBlog = new Blog(body.getCategoria(), body.getTitolo(), body.getCover(), body.getContenuto(), body.getTempoDiLettura());
+
+        Autore autore = this.autoreService.findAutoreById(body.getAuthorId());
+        autore.getListaBlogs().add(newBlog);
+        newBlog.setAuthor(autore);
+
         this.blogRepository.save(newBlog);
+
         log.info("Il blog + " + body.getTitolo() + " è stato aggiunto al database");
         return newBlog;
     }
