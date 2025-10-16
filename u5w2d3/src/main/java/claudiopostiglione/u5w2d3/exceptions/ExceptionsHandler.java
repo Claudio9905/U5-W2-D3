@@ -21,14 +21,15 @@ public class ExceptionsHandler extends RuntimeException {
 
     @ExceptionHandler(IdNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorsPayload handleIdNotFound(IdNotFoundException er){
-        return new  ErrorsPayload(er.getMessage(), LocalDate.now());
+    public ErrorsPayload handleIdNotFound(IdNotFoundException ex){
+        return new  ErrorsPayload(ex.getMessage(), LocalDate.now());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorsPayload handleServerError(Exception er){
-        return new  ErrorsPayload(er.getMessage(), LocalDate.now());
+    public ErrorsPayload handleServerError(Exception ex){
+        ex.printStackTrace();
+        return new  ErrorsPayload(ex.getMessage(), LocalDate.now());
     }
 
 }
